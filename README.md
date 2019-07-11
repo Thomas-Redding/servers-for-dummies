@@ -1,8 +1,6 @@
 # servers-for-dummies
 
-## Project Overview
-
-
+https://cloud.google.com/appengine/docs/standard/go/quickstart
 
 ### Deploying
 
