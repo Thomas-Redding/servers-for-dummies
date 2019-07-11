@@ -1,0 +1,12 @@
+
+runtime: python27
+api_version: 1
+threadsafe: true
+service: my-py
+
+env_variables:
+  BUCKET_NAME: "servers-for-dummies-main-bucket"
+
+handlers:
+- url: /.*
+  script: main.app

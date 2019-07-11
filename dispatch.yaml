@@ -1,0 +1,9 @@
+dispatch:
+  - url: "servers-for-dummies.appspot.com/*"
+    service: default
+
+  - url: "golang.servers-for-dummies.appspot.com/*"
+    service: my-go
+
+  - url: "python.servers-for-dummies.appspot.com/*"
+    service: my-py

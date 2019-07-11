@@ -1,0 +1,11 @@
+
+runtime: go
+api_version: go1
+service: default
+
+env_variables:
+  BUCKET_NAME: "servers-for-dummies-main-bucket"
+
+handlers:
+- url: /.*
+  script: _go_app
