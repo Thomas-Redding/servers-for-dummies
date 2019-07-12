@@ -2,6 +2,12 @@
 
 https://cloud.google.com/appengine/docs/standard/go/quickstart
 
+
+
+https://cloud.google.com/appengine/docs/standard/go/googlecloudstorageclient/app-engine-cloud-storage-sample
+
+https://cloud.google.com/appengine/docs/standard/python/googlecloudstorageclient/app-engine-cloud-storage-sample
+
 ### Deploying
 
 ```bash
