@@ -46,17 +46,17 @@ func (fileSystem *FileSystem) write(filePath string, newContents []byte) error {
   return nil
 }
 
-func (fileSystem *FileSystem) read(fileName string) ([]byte, error) {
-  rc, err := fileSystem._bucketHandle.Object(fileName).NewReader(fileSystem._ctx)
+func (fileSystem *FileSystem) read(filePath string) ([]byte, error) {
+  rc, err := fileSystem._bucketHandle.Object(filePath).NewReader(fileSystem._ctx)
   if err != nil {
-    errorString := fmt.Sprintf("readFile: unable to open file from bucket %q, file %q: %v", fileSystem._bucketName, fileName, err)
+    errorString := fmt.Sprintf("readFile: unable to open file from bucket %q, file %q: %v", fileSystem._bucketName, filePath, err)
     log.Errorf(fileSystem._ctx, errorString)
     return nil, errors.New(errorString)
   }
   defer rc.Close()
   slurp, err := ioutil.ReadAll(rc)
   if err != nil {
-    errorString := fmt.Sprintf("readFile: unable to read data from bucket %q, file %q: %v", fileSystem._bucketName, fileName, err)
+    errorString := fmt.Sprintf("readFile: unable to read data from bucket %q, file %q: %v", fileSystem._bucketName, filePath, err)
     log.Errorf(fileSystem._ctx, errorString)
     return nil, errors.New(errorString)
   }

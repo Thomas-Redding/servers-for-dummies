@@ -4,6 +4,7 @@ package main
 import (
   "fmt"
   "net/http"
+  "strconv"
 
   "cloud.google.com/go/storage"
   "google.golang.org/appengine"
@@ -20,26 +21,29 @@ func handle(writer http.ResponseWriter, request *http.Request) {
   ctx := appengine.NewContext(request)
   bucketName, err := file.DefaultBucketName(ctx)
   if err != nil {
-    log.Errorf(ctx, "failed to get default GCS bucket name: %v", err)
+  	log.Errorf(ctx, "failed to get default GCS bucket name: %v", err)
+  	sendError(writer, 500, "Internal Server Error")
+  	return
   }
-  writer.Header().Set("Content-type", "text/plain")
-  writer.Write([]byte("Hello World (Golang)!\n" + request.URL.Path))
-
   client, err := storage.NewClient(ctx)
   if err != nil {
     log.Errorf(ctx, "failed to create client: %v", err)
-    return
+    sendError(writer, 500, "Internal Server Error")
+  	return
   }
   defer client.Close()
 
   fileSystem := connectToFileSystem(ctx, client, bucketName)
+  fileSystem.write("test-file-golang.txt", []byte("Lorem ipsum dol..."))
+  fileData, _ := fileSystem.read("test-file-golang.txt")
 
-  writer.Header().Set("Content-Type", "text/plain; charset=utf-8")
-  fmt.Fprintf(writer, "Demo GCS Application running from Version: %v\n", appengine.VersionID(ctx))
-  fmt.Fprintf(writer, "Using bucket name: %v\n\n", bucketName)
+  writer.Header().Set("Content-type", "text/plain")
+  writer.Write([]byte("Hello World (Golang)!\n"))
+  writer.Write([]byte(request.URL.Path + "\n"))
+  fmt.Fprintf(writer, "%v", string(fileData))
+}
 
-  fileSystem.write("demo-testfile-go", []byte("lorem lorem 123"))
-  fileData, _ := fileSystem.read("demo-testfile-go")
-  fmt.Fprintf(writer, "File data: %v\n\n", string(fileData))
-  fmt.Fprintf(writer, "temp: %v\n\n", string(fileData))
+func sendError(writer http.ResponseWriter, errorCode int, message string) {
+  writer.WriteHeader(errorCode)
+  writer.Write([]byte("Error " + strconv.Itoa(errorCode) + ": " + message))
 }
