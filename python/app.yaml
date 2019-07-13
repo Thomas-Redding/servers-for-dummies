@@ -5,7 +5,7 @@ threadsafe: true
 service: my-py
 
 env_variables:
-  BUCKET_NAME: "servers-for-dummies-main-bucket"
+  BUCKET_NAME: "servers-for-dummies.appspot.com"
 
 handlers:
 - url: /.*

@@ -8,7 +8,6 @@ import (
 
   "cloud.google.com/go/storage"
   "google.golang.org/appengine"
-  "google.golang.org/appengine/file"
   "google.golang.org/appengine/log"
 )
 
@@ -19,12 +18,6 @@ func main() {
 
 func handle(writer http.ResponseWriter, request *http.Request) {
   ctx := appengine.NewContext(request)
-  bucketName, err := file.DefaultBucketName(ctx)
-  if err != nil {
-  	log.Errorf(ctx, "failed to get default GCS bucket name: %v", err)
-  	sendError(writer, 500, "Internal Server Error")
-  	return
-  }
   client, err := storage.NewClient(ctx)
   if err != nil {
     log.Errorf(ctx, "failed to create client: %v", err)
@@ -33,7 +26,11 @@ func handle(writer http.ResponseWriter, request *http.Request) {
   }
   defer client.Close()
 
-  fileSystem := connectToFileSystem(ctx, client, bucketName)
+  fileSystem, err := connectToDefaultFileSystem(ctx, client)
+  if err != nil {
+    sendError(writer, 500, "Internal Server Error")
+    return
+  }
   fileSystem.write("test-file-golang.txt", []byte("Lorem ipsum dol..."))
   fileData, _ := fileSystem.read("test-file-golang.txt")
 

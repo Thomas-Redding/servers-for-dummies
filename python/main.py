@@ -1,19 +1,15 @@
-import os
-import lib.cloudstorage
-from google.appengine.api import app_identity
 import webapp2
+
+from FileSystem import FileSystem
 
 class MainPage(webapp2.RequestHandler):
   def get(self):
-    bucketName = os.environ.get('BUCKET_NAME', app_identity.get_default_gcs_bucket_name())
-
+    fileSystem = FileSystem()
+    fileSystem.write("test-file-python.txt", "Lorem ipsum dol...")
+    fileContents = fileSystem.read("test-file-python.txt")
     self.response.headers['Content-Type'] = 'text/plain'
-    self.response.write('Hello World (Python)!')
-
-  def write(self, bucketName, filePath, data):
-    filename = '/' + bucketName + '/' + filePath
-    writeRetryParams = cloudstorage.RetryParams(backoff_factor=1.1)
-    with cloudstorage.open(filename, 'w', content_type='text/plain', options={'x-goog-meta-foo': 'foo', 'x-goog-meta-bar': 'bar'}, retry_params=writeRetryParams) as cloudstorageFile:
-      cloudstorageFile.write(data)
+    self.response.write('Hello World (Python)!\n')
+    self.response.write(self.request.path + "\n")
+    self.response.write(fileContents)
 
 app = webapp2.WSGIApplication([('/*', MainPage)], debug=True)

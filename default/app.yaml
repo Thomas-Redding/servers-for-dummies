@@ -4,7 +4,7 @@ api_version: go1
 service: default
 
 env_variables:
-  BUCKET_NAME: "servers-for-dummies-main-bucket"
+  BUCKET_NAME: "servers-for-dummies.appspot.com"
 
 handlers:
 - url: /.*

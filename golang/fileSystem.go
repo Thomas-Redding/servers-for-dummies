@@ -8,6 +8,7 @@ import (
 
   "cloud.google.com/go/storage"
   "golang.org/x/net/context"
+  "google.golang.org/appengine/file"
   "google.golang.org/appengine/log"
 )
 
@@ -16,6 +17,16 @@ type FileSystem struct {
   _client *storage.Client
   _bucketName string
   _bucketHandle *storage.BucketHandle
+}
+
+func connectToDefaultFileSystem(ctx context.Context, client *storage.Client) (*FileSystem, error) {
+  bucketName, err := file.DefaultBucketName(ctx)
+  if err != nil {
+    log.Errorf(ctx, "failed to get default GCS bucket name: %v", err)
+    return nil, err
+  }
+  bucketHandle := client.Bucket(bucketName)
+  return &FileSystem{_ctx: ctx, _client: client, _bucketName: bucketName, _bucketHandle: bucketHandle}, nil
 }
 
 func connectToFileSystem(ctx context.Context, client *storage.Client, bucketName string) *FileSystem {
@@ -27,12 +38,12 @@ func connectToFileSystem(ctx context.Context, client *storage.Client, bucketName
  Overwrite a file at `filePath` with `newContents`. If no file exists, create a new one.
  */
 func (fileSystem *FileSystem) write(filePath string, newContents []byte) error {
+  return fileSystem.writeFancy(filePath, newContents, make(map[string]string))
+}
+func (fileSystem *FileSystem) writeFancy(filePath string, newContents []byte, metaData map[string]string) error {
   wc := fileSystem._bucketHandle.Object(filePath).NewWriter(fileSystem._ctx)
   wc.ContentType = "text/plain"
-  wc.Metadata = map[string]string{
-    "x-goog-meta-foo": "foo",
-    "x-goog-meta-bar": "bar",
-  }
+  wc.Metadata = metaData
   if _, err := wc.Write(newContents); err != nil {
     errorString := fmt.Sprintf("createFile: unable to write data to bucket %q, file %q: %v", fileSystem._bucketName, filePath, err)
     log.Errorf(fileSystem._ctx, errorString)

@@ -8,10 +8,38 @@ https://cloud.google.com/appengine/docs/standard/go/googlecloudstorageclient/app
 
 https://cloud.google.com/appengine/docs/standard/python/googlecloudstorageclient/app-engine-cloud-storage-sample
 
+https://cloud.google.com/appengine/docs/standard/python/tools/using-libraries-python-27
+
+## Creating a Google Cloud Project
+
+1. Navigate to the [Google Cloud Console](https://console.cloud.google.com) and create a "NEW PROJECT".
+2. Follow the workflow.
+3. Activate the default Cloud Storage buckets???
+
+## Installing Dependencies
+
+### Google Cloud
+
+[Download](https://cloud.google.com/sdk/docs/) the Google Cloud SDK
+
+### Golang
+
+### Python
+
+```bash
+cd python
+# Install Python's Google App Engine Cloud Storage Client module.
+pip install -t lib -r requirements.txt
+```
+
+
+
 ### Deploying
 
 ```bash
+# Deploy the services.
 gcloud app deploy default/app.yaml golang/app.yaml python/app.yaml
+# Direct each subdomain to its service.
 gcloud app deploy dispatch.yaml
 ```
 
