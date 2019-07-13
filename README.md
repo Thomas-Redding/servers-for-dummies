@@ -16,7 +16,7 @@ The `default` service just returns a constant string. `my-go` and `my-py` are in
 
 1. Navigate to the [Google Cloud Console](https://console.cloud.google.com) and create a "NEW PROJECT".
 2. Follow the workflow.
-3. Activate the default Cloud Storage buckets???
+3. TODO: Activate the default Cloud Storage buckets and other stuff...
 
 ### Install Dependencies
 
@@ -47,7 +47,7 @@ dev_appserver.py golang/app.yaml --default_gcs_bucket_name redding-dev.appspot.c
 dev_appserver.py python/app.yaml --default_gcs_bucket_name redding-dev.appspot.coms
 ```
 
-## Links
+## Related Links
 
 [Quickstart Instructions](https://cloud.google.com/appengine/docs/standard/go/quickstart)
 
